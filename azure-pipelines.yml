@@ -24,7 +24,7 @@ pr:
 
 variables:
   - name: FLUTTER_VERSION
-    value: '3.19.0'
+    value: '3.24.0'
   - name: JAVA_VERSION
     value: '17'
   - name: ANDROID_BUILD_TOOLS_VERSION
@@ -56,7 +56,7 @@ stages:
               # Flutter SDKのインストール
               git clone https://github.com/flutter/flutter.git \
                 --depth 1 \
-                --branch stable \
+                --branch $(FLUTTER_VERSION) \
                 $HOME/flutter
               echo "##vso[task.prependpath]$HOME/flutter/bin"
             displayName: 'Install Flutter $(FLUTTER_VERSION)'
@@ -115,7 +115,7 @@ stages:
           - script: |
               git clone https://github.com/flutter/flutter.git \
                 --depth 1 \
-                --branch stable \
+                --branch $(FLUTTER_VERSION) \
                 $HOME/flutter
               echo "##vso[task.prependpath]$HOME/flutter/bin"
             displayName: 'Install Flutter'
@@ -165,7 +165,7 @@ stages:
           - script: |
               git clone https://github.com/flutter/flutter.git \
                 --depth 1 \
-                --branch stable \
+                --branch $(FLUTTER_VERSION) \
                 $HOME/flutter
               echo "##vso[task.prependpath]$HOME/flutter/bin"
             displayName: 'Install Flutter'
@@ -225,7 +225,7 @@ stages:
           - script: |
               git clone https://github.com/flutter/flutter.git \
                 --depth 1 \
-                --branch stable \
+                --branch $(FLUTTER_VERSION) \
                 $HOME/flutter
               echo "##vso[task.prependpath]$HOME/flutter/bin"
             displayName: 'Install Flutter'
@@ -283,7 +283,7 @@ stages:
           - script: |
               git clone https://github.com/flutter/flutter.git \
                 --depth 1 \
-                --branch stable \
+                --branch $(FLUTTER_VERSION) \
                 $HOME/flutter
               echo "##vso[task.prependpath]$HOME/flutter/bin"
             displayName: 'Install Flutter'
