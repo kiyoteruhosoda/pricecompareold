@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Named constants for magic values
+const double _disabledAlpha = 0.2;
+const double _precisionThreshold = 10.0;
+
 /// Data model for a single price comparison row.
 class PriceRow {
   PriceRow({required this.id})
@@ -206,7 +210,7 @@ class _PriceCard extends StatelessWidget {
                   Icons.delete_outline,
                   color: canDelete
                       ? colorScheme.onSurfaceVariant
-                      : colorScheme.onSurface.withValues(alpha: 0.2),
+                      : colorScheme.onSurface.withValues(alpha: _disabledAlpha),
                 ),
                 onPressed: canDelete ? onDelete : null,
                 tooltip: '削除',
@@ -267,7 +271,7 @@ class _UnitPriceBadge extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final label = unitPrice! < 10
+    final label = unitPrice! < _precisionThreshold
         ? '¥${unitPrice!.toStringAsFixed(4)}/unit'
         : '¥${unitPrice!.toStringAsFixed(2)}/unit';
 
