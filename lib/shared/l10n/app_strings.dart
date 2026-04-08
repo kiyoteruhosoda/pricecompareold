@@ -4,9 +4,8 @@ class AppStrings {
   AppStrings._();
 
   // ─── App ──────────────────────────────────────────────────────────────
-  static const String appName = 'FlutterBase';
-  static const String appDescription =
-      'Flutter base app following the DADS design system';
+  static const String appName = '単価比較';
+  static const String appDescription = '複数商品の実質単価をリアルタイムで比較できるアプリ';
 
   // ─── Navigation ───────────────────────────────────────────────────────
   static const String navHome = 'Home';
@@ -14,7 +13,7 @@ class AppStrings {
   static const String navSettings = 'Settings';
 
   // ─── Drawer ───────────────────────────────────────────────────────────
-  static const String drawerSubtitle = 'DADS Design System';
+  static const String drawerSubtitle = '単価比較アプリ';
   static const String drawerClose = 'Close';
   static const String drawerAbout = 'About';
   static const String drawerLicenses = 'Licenses';
@@ -147,7 +146,7 @@ class AppStrings {
       'Please refer to the package license file for details.';
 
   // ─── Splash screen ───────────────────────────────────────────────────
-  static const String splashSubtitle = 'DADS Design System';
+  static const String splashSubtitle = '実質単価をリアルタイム比較';
 
   // ─── Common ──────────────────────────────────────────────────────────
   static const String commonRetry = 'Retry';
