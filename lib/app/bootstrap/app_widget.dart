@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterbase/app/bootstrap/app_router.dart';
 import 'package:flutterbase/app/di/service_locator.dart';
-import 'package:flutterbase/presentation/pages/main_page.dart';
+import 'package:flutterbase/presentation/pages/compare_page.dart';
 import 'package:flutterbase/presentation/pages/splash_page.dart';
 import 'package:flutterbase/presentation/viewmodels/theme_viewmodel.dart';
 import 'package:flutterbase/shared/l10n/app_strings.dart';
@@ -59,7 +59,7 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
           onGenerateRoute: AppRouter.onGenerateRoute,
           home: _showSplash
               ? SplashPage(onComplete: _onSplashComplete)
-              : const MainPage(),
+              : const ComparePage(),
         );
       },
     );
