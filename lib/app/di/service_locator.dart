@@ -2,6 +2,9 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutterbase/application/usecases/app_info/get_app_info_usecase.dart';
+import 'package:flutterbase/application/usecases/comparison/delete_saved_comparison_usecase.dart';
+import 'package:flutterbase/application/usecases/comparison/get_saved_comparisons_usecase.dart';
+import 'package:flutterbase/application/usecases/comparison/save_comparison_usecase.dart';
 import 'package:flutterbase/application/usecases/debug/get_debug_settings_usecase.dart';
 import 'package:flutterbase/application/usecases/debug/set_debug_mode_usecase.dart';
 import 'package:flutterbase/application/usecases/debug/set_log_level_usecase.dart';
@@ -9,14 +12,18 @@ import 'package:flutterbase/application/usecases/theme/get_theme_preference_usec
 import 'package:flutterbase/application/usecases/theme/set_theme_preference_usecase.dart';
 import 'package:flutterbase/domain/repositories/app_info_repository.dart';
 import 'package:flutterbase/domain/repositories/debug_settings_repository.dart';
+import 'package:flutterbase/domain/repositories/saved_comparison_repository.dart';
 import 'package:flutterbase/domain/repositories/theme_preference_repository.dart';
+import 'package:flutterbase/infrastructure/db/sqlite/dao/saved_comparison_dao.dart';
 import 'package:flutterbase/infrastructure/logging/persistent_app_logger.dart';
 import 'package:flutterbase/infrastructure/repositories/package_info_app_info_repository.dart';
 import 'package:flutterbase/infrastructure/repositories/shared_preferences_debug_settings_repository.dart';
 import 'package:flutterbase/infrastructure/repositories/shared_preferences_theme_preference_repository.dart';
+import 'package:flutterbase/infrastructure/repositories/sqlite_saved_comparison_repository.dart';
 import 'package:flutterbase/presentation/viewmodels/about_viewmodel.dart';
 import 'package:flutterbase/presentation/viewmodels/debug_settings_viewmodel.dart';
 import 'package:flutterbase/presentation/viewmodels/debug_viewmodel.dart';
+import 'package:flutterbase/presentation/viewmodels/saved_comparisons_viewmodel.dart';
 import 'package:flutterbase/presentation/viewmodels/theme_viewmodel.dart';
 import 'package:flutterbase/shared/logging/app_logger.dart';
 
@@ -52,6 +59,13 @@ Future<void> setupServiceLocator() async {
     const PackageInfoAppInfoRepository(),
   );
 
+  // ─── SQLite / Saved Comparisons ──────────────────────────────────────
+
+  final savedComparisonDao = SavedComparisonDao();
+  sl.registerSingleton<SavedComparisonRepository>(
+    SqliteSavedComparisonRepository(savedComparisonDao),
+  );
+
   // ─── Use cases ───────────────────────────────────────────────────────
 
   sl.registerFactory<GetThemePreferenceUseCase>(
@@ -71,6 +85,15 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SetLogLevelUseCase>(
     () => SetLogLevelUseCase(sl<DebugSettingsRepository>(), sl<AppLogger>()),
+  );
+  sl.registerFactory<SaveComparisonUseCase>(
+    () => SaveComparisonUseCase(sl<SavedComparisonRepository>()),
+  );
+  sl.registerFactory<GetSavedComparisonsUseCase>(
+    () => GetSavedComparisonsUseCase(sl<SavedComparisonRepository>()),
+  );
+  sl.registerFactory<DeleteSavedComparisonUseCase>(
+    () => DeleteSavedComparisonUseCase(sl<SavedComparisonRepository>()),
   );
 
   // ─── ViewModels ──────────────────────────────────────────────────────
@@ -94,13 +117,12 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<DebugViewModel>(
     () => DebugViewModel(sl<GetAppInfoUseCase>(), sl<AppLogger>()),
   );
-
-  // ─── Infrastructure (DB, Repositories) ──────────────────────────────
-  // TODO: add when features are implemented
-  // sl.registerSingleton<AppDatabase>(AppDatabase());
-
-  // ─── Application (UseCases) ─────────────────────────────────────────
-  // TODO: add when features are implemented
+  sl.registerFactory<SavedComparisonsViewModel>(
+    () => SavedComparisonsViewModel(
+      sl<GetSavedComparisonsUseCase>(),
+      sl<DeleteSavedComparisonUseCase>(),
+    ),
+  );
 
   sl<AppLogger>().info('[DI] Service locator setup complete');
 }
