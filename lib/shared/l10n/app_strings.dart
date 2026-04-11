@@ -4,8 +4,9 @@ class AppStrings {
   AppStrings._();
 
   // ─── App ──────────────────────────────────────────────────────────────
-  static const String appName = '単価比較';
-  static const String appDescription = '複数商品の実質単価をリアルタイムで比較できるアプリ';
+  static const String appName = 'Price Compare';
+  static const String appDescription =
+      'Compare unit prices of multiple products in real time';
 
   // ─── Navigation ───────────────────────────────────────────────────────
   static const String navHome = 'Home';
@@ -13,7 +14,7 @@ class AppStrings {
   static const String navSettings = 'Settings';
 
   // ─── Drawer ───────────────────────────────────────────────────────────
-  static const String drawerSubtitle = '単価比較アプリ';
+  static const String drawerSubtitle = 'Unit Price Comparison';
   static const String drawerClose = 'Close';
   static const String drawerAbout = 'About';
   static const String drawerLicenses = 'Licenses';
@@ -69,7 +70,8 @@ class AppStrings {
   static const String aboutPlatformValue = 'Android / iOS';
   static const String aboutDesignSystemSectionTitle = 'Design System';
   static const String aboutDesignSystemBody =
-      'This app is built following the Design System\nprovided by the Digital Agency of Japan (DADS).';
+      'This app is built following the Design System\n'
+      'provided by the Digital Agency of Japan (DADS).';
   static const String aboutDesignSystemLink = 'Official Design System Website';
 
   // ─── Debug page ───────────────────────────────────────────────────────
@@ -145,8 +147,34 @@ class AppStrings {
   static const String licensesDetails =
       'Please refer to the package license file for details.';
 
-  // ─── Splash screen ───────────────────────────────────────────────────
-  static const String splashSubtitle = '実質単価をリアルタイム比較';
+  // ─── Compare page ────────────────────────────────────────────────────
+  static const String compareTitle = 'Price Compare';
+  static const String compareAddRow = 'Add item';
+  static const String compareDeleteTooltip = 'Delete';
+  static const String compareItemLabel = 'Item';
+  static const String comparePriceLabel = 'Price (¥)';
+  static const String compareQtyLabel = 'Quantity';
+  static const String comparePointsLabel = 'Points';
+  static const String compareSaveTooltip = 'Save comparison';
+  static const String compareSavedListTooltip = 'Saved comparisons';
+  static const String compareSaveTitleHint = 'Comparison title';
+  static const String compareSaveButton = 'Save';
+  static const String compareSaveCancel = 'Cancel';
+  static const String compareSaveSuccess = 'Comparison saved';
+  static const String compareSaveDialogTitle = 'Save Comparison';
+
+  // ─── Saved comparisons page ──────────────────────────────────────────
+  static const String savedTitle = 'Saved Comparisons';
+  static const String savedEmpty = 'No saved comparisons yet';
+  static const String savedDeleteTooltip = 'Delete';
+  static const String savedDeleteConfirmTitle = 'Delete Comparison';
+  static const String savedDeleteConfirmBody =
+      'Are you sure you want to delete this comparison?';
+  static const String savedDeleteConfirm = 'Delete';
+  static const String savedDeleteCancel = 'Cancel';
+  static const String savedDeleteSuccess = 'Comparison deleted';
+  static const String savedItemsLabel = 'items';
+  static const String savedCheapestLabel = 'Best';
 
   // ─── Saved Comparisons page ───────────────────────────────────────────
   static const String savedTitle = '保存済み比較';

@@ -1,6 +1,6 @@
-/// A single item within a saved price comparison.
-class SavedComparisonItem {
-  const SavedComparisonItem({
+/// DTO for a single item within a saved comparison.
+class SavedComparisonItemDto {
+  const SavedComparisonItemDto({
     required this.label,
     required this.price,
     required this.qty,
@@ -15,9 +15,9 @@ class SavedComparisonItem {
   final double? unitPrice;
 }
 
-/// A saved price comparison with a user-defined title and timestamp.
-class SavedComparison {
-  const SavedComparison({
+/// DTO representing a saved comparison result.
+class SavedComparisonDto {
+  const SavedComparisonDto({
     required this.id,
     required this.title,
     required this.savedAt,
@@ -27,5 +27,5 @@ class SavedComparison {
   final String id;
   final String title;
   final DateTime savedAt;
-  final List<SavedComparisonItem> items;
+  final List<SavedComparisonItemDto> items;
 }

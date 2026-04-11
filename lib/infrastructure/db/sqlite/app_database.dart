@@ -1,42 +1,46 @@
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:pricecompare/infrastructure/db/sqlite/migrations/migration_v1.dart';
 
-/// Singleton wrapper around the application's SQLite database.
+/// Opens and manages the SQLite database, applying migrations in order.
 class AppDatabase {
   AppDatabase._();
 
-  static const int _version = 1;
-  static const String _fileName = 'pricecompare.db';
+  static const String _dbName = 'pricecompare.db';
+  static const int _currentVersion = 1;
 
-  static AppDatabase? _instance;
-  static AppDatabase get instance => _instance ??= AppDatabase._();
+  static Database? _instance;
 
-  Database? _db;
-
-  /// Opens (or creates) the database, running migrations as needed.
-  Future<Database> get database async {
-    _db ??= await _open();
-    return _db!;
+  static Future<Database> get instance async {
+    _instance ??= await _open();
+    return _instance!;
   }
 
-  Future<Database> _open() async {
+  static Future<Database> _open() async {
     final dbPath = await getDatabasesPath();
-    final path = p.join(dbPath, _fileName);
-
+    final path = join(dbPath, _dbName);
     return openDatabase(
       path,
-      version: _version,
-      onCreate: (db, version) => migrateV1(db),
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // Future migrations go here.
-      },
+      version: _currentVersion,
+      onCreate: (db, version) => _migrate(db, 0, version),
+      onUpgrade: (db, oldVersion, newVersion) =>
+          _migrate(db, oldVersion, newVersion),
     );
   }
 
-  /// Closes the database. Used in tests and teardown.
-  Future<void> close() async {
-    await _db?.close();
-    _db = null;
+  static Future<void> _migrate(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 1) {
+      await db.execute('''
+        CREATE TABLE saved_comparisons (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          saved_at INTEGER NOT NULL,
+          items_json TEXT NOT NULL
+        )
+      ''');
+    }
   }
 }

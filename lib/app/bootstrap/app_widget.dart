@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pricecompare/app/bootstrap/app_router.dart';
 import 'package:pricecompare/app/di/service_locator.dart';
 import 'package:pricecompare/presentation/pages/compare_page.dart';
-import 'package:pricecompare/presentation/pages/splash_page.dart';
 import 'package:pricecompare/presentation/viewmodels/theme_viewmodel.dart';
 import 'package:pricecompare/shared/l10n/app_strings.dart';
 import 'package:pricecompare/shared/logging/app_logger.dart';
@@ -17,7 +16,6 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
-  bool _showSplash = true;
   late final AppLogger _logger;
 
   @override
@@ -39,11 +37,6 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
     _logger.debug('[App] Lifecycle → ${state.name}');
   }
 
-  void _onSplashComplete() {
-    _logger.info('[App] Splash complete — navigating to main');
-    setState(() => _showSplash = false);
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeViewModel = sl<ThemeViewModel>();
@@ -57,9 +50,7 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
           darkTheme: AppTheme.dark,
           themeMode: themeViewModel.themeMode,
           onGenerateRoute: AppRouter.onGenerateRoute,
-          home: _showSplash
-              ? SplashPage(onComplete: _onSplashComplete)
-              : const ComparePage(),
+          home: const ComparePage(),
         );
       },
     );

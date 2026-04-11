@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pricecompare/app/di/service_locator.dart';
-import 'package:pricecompare/presentation/pages/main_page.dart';
-import 'package:pricecompare/presentation/pages/splash_page.dart';
+import 'package:pricecompare/presentation/pages/saved_comparisons_page.dart';
 import 'package:pricecompare/presentation/pages/system/about_page.dart';
 import 'package:pricecompare/presentation/pages/system/debug_page.dart';
 import 'package:pricecompare/presentation/pages/system/licenses_page.dart';
@@ -13,24 +12,15 @@ import 'package:pricecompare/shared/logging/app_logger.dart';
 class AppRouter {
   AppRouter._();
 
-  static const String splash = '/';
-  static const String main = '/main';
   static const String about = '/about';
   static const String licenses = '/licenses';
   static const String debug = '/debug';
   static const String logs = '/logs';
+  static const String saved = '/saved';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     sl<AppLogger>().debug('[Router] → ${settings.name}');
     return switch (settings.name) {
-      splash => MaterialPageRoute<void>(
-          builder: (_) => const SplashPage(),
-          settings: settings,
-        ),
-      main => MaterialPageRoute<void>(
-          builder: (_) => const MainPage(),
-          settings: settings,
-        ),
       about => MaterialPageRoute<void>(
           builder: (_) => const AboutPage(),
           settings: settings,
@@ -45,6 +35,10 @@ class AppRouter {
         ),
       logs => MaterialPageRoute<void>(
           builder: (_) => const LogsPage(),
+          settings: settings,
+        ),
+      saved => MaterialPageRoute<void>(
+          builder: (_) => const SavedComparisonsPage(),
           settings: settings,
         ),
       _ => MaterialPageRoute<void>(

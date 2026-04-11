@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pricecompare/app/di/service_locator.dart';
+import 'package:pricecompare/application/dto/saved_comparison_dto.dart';
+import 'package:pricecompare/application/usecases/comparison/save_comparison_usecase.dart';
+import 'package:pricecompare/shared/l10n/app_strings.dart';
 
 // Named constants for magic values
 const double _disabledAlpha = 0.2;
@@ -19,7 +23,7 @@ class PriceRow {
   final TextEditingController qty;
   final TextEditingController points;
 
-  /// 実質単価 = (金額 - ポイント) ÷ 数量
+  /// Effective unit price = (price - points) / qty
   double? get unitPrice {
     final p = double.tryParse(price.text);
     final q = double.tryParse(qty.text);
@@ -36,7 +40,7 @@ class PriceRow {
   }
 }
 
-/// 単価比較メイン画面
+/// Main price comparison screen.
 class ComparePage extends StatefulWidget {
   const ComparePage({super.key});
 
@@ -51,13 +55,12 @@ class _ComparePageState extends State<ComparePage> {
   @override
   void initState() {
     super.initState();
-    // 初期 3 件
-    _rows.add(PriceRow(id: _newId()));
-    _rows.add(PriceRow(id: _newId()));
+    // Start with 1 row by default
     _rows.add(PriceRow(id: _newId()));
   }
 
-  String _newId() => '${DateTime.now().microsecondsSinceEpoch}_${_nextIndex++}';
+  String _newId() =>
+      '${DateTime.now().microsecondsSinceEpoch}_${_nextIndex++}';
 
   void _addRow() {
     setState(() {
@@ -76,12 +79,79 @@ class _ComparePageState extends State<ComparePage> {
 
   void _rebuild() => setState(() {});
 
-  /// 有効行（単価が算出できる行）の中で最安の id を返す。
-  /// 有効行が 2 件未満の場合は null を返す。
+  /// Returns the id of the cheapest valid row, or null if fewer than 2 valid.
   String? _cheapestId() {
     final valid = _rows.where((r) => r.unitPrice != null).toList();
     if (valid.length < 2) return null;
     return valid.reduce((a, b) => a.unitPrice! <= b.unitPrice! ? a : b).id;
+  }
+
+  Future<void> _showSaveDialog() async {
+    final titleController = TextEditingController();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.compareSaveDialogTitle),
+        content: TextField(
+          controller: titleController,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: AppStrings.compareSaveTitleHint,
+          ),
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => Navigator.of(context).pop(true),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text(AppStrings.compareSaveCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(AppStrings.compareSaveButton),
+          ),
+        ],
+      ),
+    );
+
+    titleController.dispose();
+    if (confirmed != true) return;
+
+    final title = titleController.text.trim().isEmpty
+        ? 'Comparison ${DateTime.now().toLocal()}'
+        : titleController.text.trim();
+
+    final dto = SavedComparisonDto(
+      id: '${DateTime.now().millisecondsSinceEpoch}',
+      title: title,
+      savedAt: DateTime.now(),
+      items: _rows
+          .map(
+            (r) => SavedComparisonItemDto(
+              label: r.label.text,
+              price: double.tryParse(r.price.text) ?? 0,
+              qty: double.tryParse(r.qty.text) ?? 0,
+              points: double.tryParse(r.points.text) ?? 0,
+              unitPrice: r.unitPrice,
+            ),
+          )
+          .toList(),
+    );
+
+    try {
+      await sl<SaveComparisonUseCase>().execute(dto);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(AppStrings.compareSaveSuccess)),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(AppStrings.commonError)),
+        );
+      }
+    }
   }
 
   @override
@@ -97,8 +167,45 @@ class _ComparePageState extends State<ComparePage> {
     final cheapestId = _cheapestId();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('単価 比較'),
+        title: const Text(AppStrings.compareTitle),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_outline),
+            onPressed: _showSaveDialog,
+            tooltip: AppStrings.compareSaveTooltip,
+          ),
+          IconButton(
+            icon: const Icon(Icons.list_alt_outlined),
+            onPressed: () => Navigator.of(context).pushNamed('/saved'),
+            tooltip: AppStrings.compareSavedListTooltip,
+          ),
+          PopupMenuButton<String>(
+            onSelected: (route) => Navigator.of(context).pushNamed(route),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: '/about',
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline),
+                    SizedBox(width: 8),
+                    Text(AppStrings.drawerAbout),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: '/licenses',
+                child: Row(
+                  children: [
+                    Icon(Icons.description_outlined),
+                    SizedBox(width: 8),
+                    Text(AppStrings.drawerLicenses),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -112,7 +219,8 @@ class _ComparePageState extends State<ComparePage> {
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final row = _rows[index];
-                final isCheapest = cheapestId != null && row.id == cheapestId;
+                final isCheapest =
+                    cheapestId != null && row.id == cheapestId;
                 return _PriceCard(
                   row: row,
                   index: index,
@@ -125,11 +233,12 @@ class _ComparePageState extends State<ComparePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextButton.icon(
               onPressed: _addRow,
               icon: const Icon(Icons.add_circle_outline),
-              label: const Text('行を追加'),
+              label: const Text(AppStrings.compareAddRow),
               style: TextButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
@@ -178,7 +287,7 @@ class _PriceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── 行 1: 店名 / 単価 / 削除ボタン ──────────────────────────────
+          // Row 1: label / unit price badge / delete button
           Row(
             children: [
               Expanded(
@@ -187,7 +296,8 @@ class _PriceCard extends StatelessWidget {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    hintText: '店舗・商品 ${index + 1}',
+                    hintText:
+                        '${AppStrings.compareItemLabel} ${index + 1}',
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -198,22 +308,21 @@ class _PriceCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              // 単価バッジ
               _UnitPriceBadge(
                 unitPrice: unitPrice,
                 isCheapest: isCheapest,
               ),
               const SizedBox(width: 4),
-              // 削除ボタン
               IconButton(
                 icon: Icon(
                   Icons.delete_outline,
                   color: canDelete
                       ? colorScheme.onSurfaceVariant
-                      : colorScheme.onSurface.withValues(alpha: _disabledAlpha),
+                      : colorScheme.onSurface
+                          .withValues(alpha: _disabledAlpha),
                 ),
                 onPressed: canDelete ? onDelete : null,
-                tooltip: '削除',
+                tooltip: AppStrings.compareDeleteTooltip,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(
                   minWidth: 36,
@@ -223,13 +332,13 @@ class _PriceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          // ── 行 2: 金額 / 数量 / ポイント ───────────────────────────────
+          // Row 2: price / qty / points
           Row(
             children: [
               Expanded(
                 child: _NumField(
                   controller: row.price,
-                  label: '金額（円）',
+                  label: AppStrings.comparePriceLabel,
                   onChanged: onChanged,
                 ),
               ),
@@ -237,7 +346,7 @@ class _PriceCard extends StatelessWidget {
               Expanded(
                 child: _NumField(
                   controller: row.qty,
-                  label: '数量',
+                  label: AppStrings.compareQtyLabel,
                   onChanged: onChanged,
                 ),
               ),
@@ -245,7 +354,7 @@ class _PriceCard extends StatelessWidget {
               Expanded(
                 child: _NumField(
                   controller: row.points,
-                  label: 'ポイント',
+                  label: AppStrings.comparePointsLabel,
                   onChanged: onChanged,
                 ),
               ),
@@ -257,7 +366,7 @@ class _PriceCard extends StatelessWidget {
   }
 }
 
-// ─── 単価バッジ ──────────────────────────────────────────────────────────────
+// ─── Unit price badge ────────────────────────────────────────────────────────
 
 class _UnitPriceBadge extends StatelessWidget {
   const _UnitPriceBadge({required this.unitPrice, required this.isCheapest});
@@ -310,7 +419,7 @@ class _UnitPriceBadge extends StatelessWidget {
   }
 }
 
-// ─── 数値入力フィールド ───────────────────────────────────────────────────────
+// ─── Numeric text field ──────────────────────────────────────────────────────
 
 class _NumField extends StatelessWidget {
   const _NumField({

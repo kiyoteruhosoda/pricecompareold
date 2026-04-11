@@ -1,31 +1,30 @@
+import 'package:pricecompare/infrastructure/db/sqlite/app_database.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/rows/saved_comparison_row.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:pricecompare/infrastructure/db/sqlite/rows/saved_comparison_db_row.dart';
 
-/// Raw SQL operations for the `saved_comparisons` table.
+/// SQL operations for the saved_comparisons table.
 class SavedComparisonDao {
-  const SavedComparisonDao(this._db);
+  static const String _table = 'saved_comparisons';
 
-  static const _table = 'saved_comparisons';
+  Future<Database> get _db => AppDatabase.instance;
 
-  final Database _db;
-
-  Future<List<SavedComparisonDbRow>> getAll() async {
-    final maps = await _db.query(_table, orderBy: 'created_at DESC');
-    return maps.map(SavedComparisonDbRow.fromMap).toList();
+  Future<List<SavedComparisonRow>> findAll() async {
+    final db = await _db;
+    final maps = await db.query(_table, orderBy: 'saved_at DESC');
+    return maps.map(SavedComparisonRow.fromMap).toList();
   }
 
-  Future<void> insert(SavedComparisonDbRow row) async {
-    await _db.insert(
+  Future<void> insert(SavedComparisonRow row) async {
+    final db = await _db;
+    await db.insert(
       _table,
       row.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  /// Deletes the row with the given [id].
-  ///
-  /// Throws [DatabaseException] on storage failure; never suppresses it.
   Future<void> deleteById(String id) async {
-    await _db.delete(_table, where: 'id = ?', whereArgs: [id]);
+    final db = await _db;
+    await db.delete(_table, where: 'id = ?', whereArgs: [id]);
   }
 }
