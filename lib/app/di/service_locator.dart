@@ -5,18 +5,27 @@ import 'package:pricecompare/application/usecases/app_info/get_app_info_usecase.
 import 'package:pricecompare/application/usecases/debug/get_debug_settings_usecase.dart';
 import 'package:pricecompare/application/usecases/debug/set_debug_mode_usecase.dart';
 import 'package:pricecompare/application/usecases/debug/set_log_level_usecase.dart';
+import 'package:pricecompare/application/usecases/saved_comparisons/delete_saved_comparison_usecase.dart';
+import 'package:pricecompare/application/usecases/saved_comparisons/get_saved_comparisons_usecase.dart';
+import 'package:pricecompare/application/usecases/saved_comparisons/save_comparison_usecase.dart';
 import 'package:pricecompare/application/usecases/theme/get_theme_preference_usecase.dart';
 import 'package:pricecompare/application/usecases/theme/set_theme_preference_usecase.dart';
 import 'package:pricecompare/domain/repositories/app_info_repository.dart';
 import 'package:pricecompare/domain/repositories/debug_settings_repository.dart';
+import 'package:pricecompare/domain/repositories/saved_comparison_repository.dart';
 import 'package:pricecompare/domain/repositories/theme_preference_repository.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/app_database.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/dao/saved_comparison_dao.dart';
 import 'package:pricecompare/infrastructure/logging/persistent_app_logger.dart';
+import 'package:pricecompare/infrastructure/mappers/saved_comparison_mapper.dart';
 import 'package:pricecompare/infrastructure/repositories/package_info_app_info_repository.dart';
 import 'package:pricecompare/infrastructure/repositories/shared_preferences_debug_settings_repository.dart';
 import 'package:pricecompare/infrastructure/repositories/shared_preferences_theme_preference_repository.dart';
+import 'package:pricecompare/infrastructure/repositories/sqflite_saved_comparison_repository.dart';
 import 'package:pricecompare/presentation/viewmodels/about_viewmodel.dart';
 import 'package:pricecompare/presentation/viewmodels/debug_settings_viewmodel.dart';
 import 'package:pricecompare/presentation/viewmodels/debug_viewmodel.dart';
+import 'package:pricecompare/presentation/viewmodels/saved_comparisons_viewmodel.dart';
 import 'package:pricecompare/presentation/viewmodels/theme_viewmodel.dart';
 import 'package:pricecompare/shared/logging/app_logger.dart';
 
@@ -52,6 +61,19 @@ Future<void> setupServiceLocator() async {
     const PackageInfoAppInfoRepository(),
   );
 
+  // ─── Database ────────────────────────────────────────────────────────
+
+  final db = await AppDatabase.instance.database;
+  sl.registerSingleton<AppDatabase>(AppDatabase.instance);
+
+  final savedComparisonDao = SavedComparisonDao(db);
+  final savedComparisonRepo = SqfliteSavedComparisonRepository(
+    savedComparisonDao,
+    const SavedComparisonMapper(),
+  );
+  sl.registerSingleton<SavedComparisonRepository>(savedComparisonRepo);
+  logger.info('[DI] Database ready');
+
   // ─── Use cases ───────────────────────────────────────────────────────
 
   sl.registerFactory<GetThemePreferenceUseCase>(
@@ -71,6 +93,15 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SetLogLevelUseCase>(
     () => SetLogLevelUseCase(sl<DebugSettingsRepository>(), sl<AppLogger>()),
+  );
+  sl.registerFactory<GetSavedComparisonsUseCase>(
+    () => GetSavedComparisonsUseCase(sl<SavedComparisonRepository>()),
+  );
+  sl.registerFactory<SaveComparisonUseCase>(
+    () => SaveComparisonUseCase(sl<SavedComparisonRepository>()),
+  );
+  sl.registerFactory<DeleteSavedComparisonUseCase>(
+    () => DeleteSavedComparisonUseCase(sl<SavedComparisonRepository>()),
   );
 
   // ─── ViewModels ──────────────────────────────────────────────────────
@@ -94,13 +125,14 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<DebugViewModel>(
     () => DebugViewModel(sl<GetAppInfoUseCase>(), sl<AppLogger>()),
   );
-
-  // ─── Infrastructure (DB, Repositories) ──────────────────────────────
-  // TODO: add when features are implemented
-  // sl.registerSingleton<AppDatabase>(AppDatabase());
-
-  // ─── Application (UseCases) ─────────────────────────────────────────
-  // TODO: add when features are implemented
+  sl.registerFactory<SavedComparisonsViewModel>(
+    () => SavedComparisonsViewModel(
+      sl<GetSavedComparisonsUseCase>(),
+      sl<SaveComparisonUseCase>(),
+      sl<DeleteSavedComparisonUseCase>(),
+      sl<AppLogger>(),
+    ),
+  );
 
   sl<AppLogger>().info('[DI] Service locator setup complete');
 }

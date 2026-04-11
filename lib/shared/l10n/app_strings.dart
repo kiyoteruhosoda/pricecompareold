@@ -148,6 +148,18 @@ class AppStrings {
   // ─── Splash screen ───────────────────────────────────────────────────
   static const String splashSubtitle = '実質単価をリアルタイム比較';
 
+  // ─── Saved Comparisons page ───────────────────────────────────────────
+  static const String savedTitle = '保存済み比較';
+  static const String savedEmpty = '保存済みの比較がありません';
+  static const String savedDeleteConfirmTitle = '比較を削除';
+  static const String savedDeleteConfirmBody = 'この比較を削除しますか？';
+  static const String savedDeleteConfirm = '削除';
+  static const String savedDeleteCancel = 'キャンセル';
+  static const String savedDeleteSuccess = '比較を削除しました';
+  static const String savedDeleteError = '削除に失敗しました';
+  static const String savedSaveSuccess = '比較を保存しました';
+  static const String savedSaveError = '保存に失敗しました';
+
   // ─── Common ──────────────────────────────────────────────────────────
   static const String commonRetry = 'Retry';
   static const String commonMenu = 'Menu';
