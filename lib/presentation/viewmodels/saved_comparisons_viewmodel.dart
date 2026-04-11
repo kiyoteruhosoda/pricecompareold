@@ -95,7 +95,7 @@ class SavedComparisonsViewModel extends ChangeNotifier {
 
     try {
       await _delete.execute(id);
-      _items = _items.where((c) => c.id != id).toList();
+      _items.removeWhere((c) => c.id == id);
       notifyListeners();
       _logger.debug('[SavedComparisonsViewModel] delete success: $id');
       return true;

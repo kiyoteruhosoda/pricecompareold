@@ -15,7 +15,7 @@ final class SavedComparisonMapper {
         .cast<Map<String, dynamic>>()
         .map(
           (m) => SavedComparisonRow(
-            label: m['label'] as String? ?? '',
+            label: (m['label'] as String?) ?? '',
             price: (m['price'] as num).toDouble(),
             qty: (m['qty'] as num).toDouble(),
             points: (m['points'] as num? ?? 0).toDouble(),
