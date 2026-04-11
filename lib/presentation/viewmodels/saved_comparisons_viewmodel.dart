@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutterbase/application/dto/saved_comparison_dto.dart';
-import 'package:flutterbase/application/usecases/comparison/delete_saved_comparison_usecase.dart';
-import 'package:flutterbase/application/usecases/comparison/get_saved_comparisons_usecase.dart';
-import 'package:flutterbase/shared/errors/app_error.dart';
+import 'package:pricecompare/application/dto/saved_comparison_dto.dart';
+import 'package:pricecompare/application/usecases/comparison/delete_saved_comparison_usecase.dart';
+import 'package:pricecompare/application/usecases/comparison/get_saved_comparisons_usecase.dart';
+import 'package:pricecompare/shared/errors/app_error.dart';
 
 enum SavedComparisonsState { loading, loaded, error }
 
@@ -29,15 +29,21 @@ class SavedComparisonsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> delete(String id) async {
+  /// Attempts to delete the comparison with [id].
+  ///
+  /// Returns `true` on success so the caller can show a confirmation message.
+  /// Returns `false` on failure and exposes the error via [appError].
+  /// The underlying storage exception is **never swallowed** silently.
+  Future<bool> delete(String id) async {
     try {
       await _delete.execute(id);
       comparisons.removeWhere((c) => c.id == id);
       notifyListeners();
+      return true;
     } catch (e) {
       appError = UnexpectedError(e.toString());
-      state = SavedComparisonsState.error;
       notifyListeners();
+      return false;
     }
   }
 }

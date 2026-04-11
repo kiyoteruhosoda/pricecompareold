@@ -1,5 +1,5 @@
-import 'package:flutterbase/domain/repositories/debug_settings_repository.dart';
-import 'package:flutterbase/shared/logging/log_level.dart';
+import 'package:pricecompare/domain/repositories/debug_settings_repository.dart';
+import 'package:pricecompare/shared/logging/log_level.dart';
 
 /// Returns persisted debug settings as plain values.
 final class GetDebugSettingsUseCase {

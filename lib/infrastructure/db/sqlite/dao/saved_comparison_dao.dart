@@ -1,5 +1,5 @@
-import 'package:flutterbase/infrastructure/db/sqlite/app_database.dart';
-import 'package:flutterbase/infrastructure/db/sqlite/rows/saved_comparison_row.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/app_database.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/rows/saved_comparison_row.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// SQL operations for the saved_comparisons table.

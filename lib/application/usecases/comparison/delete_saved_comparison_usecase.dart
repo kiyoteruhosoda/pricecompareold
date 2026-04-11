@@ -1,4 +1,4 @@
-import 'package:flutterbase/domain/repositories/saved_comparison_repository.dart';
+import 'package:pricecompare/domain/repositories/saved_comparison_repository.dart';
 
 class DeleteSavedComparisonUseCase {
   DeleteSavedComparisonUseCase(this._repository);

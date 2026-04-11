@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterbase/presentation/pages/compare_page.dart';
+import 'package:pricecompare/presentation/pages/compare_page.dart';
 
 void main() {
   group('PriceRow.unitPrice', () {

@@ -1,6 +1,6 @@
-import 'package:flutterbase/application/dto/saved_comparison_dto.dart';
-import 'package:flutterbase/domain/entities/saved_comparison.dart';
-import 'package:flutterbase/domain/repositories/saved_comparison_repository.dart';
+import 'package:pricecompare/application/dto/saved_comparison_dto.dart';
+import 'package:pricecompare/domain/entities/saved_comparison.dart';
+import 'package:pricecompare/domain/repositories/saved_comparison_repository.dart';
 
 class GetSavedComparisonsUseCase {
   GetSavedComparisonsUseCase(this._repository);

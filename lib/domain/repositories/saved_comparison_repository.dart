@@ -1,4 +1,4 @@
-import 'package:flutterbase/domain/entities/saved_comparison.dart';
+import 'package:pricecompare/domain/entities/saved_comparison.dart';
 
 abstract interface class SavedComparisonRepository {
   Future<List<SavedComparison>> getAll();

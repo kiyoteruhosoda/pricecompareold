@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterbase/app/di/service_locator.dart';
-import 'package:flutterbase/application/dto/saved_comparison_dto.dart';
-import 'package:flutterbase/presentation/viewmodels/saved_comparisons_viewmodel.dart';
-import 'package:flutterbase/shared/l10n/app_strings.dart';
-import 'package:flutterbase/shared/theme/theme.dart';
+import 'package:pricecompare/app/di/service_locator.dart';
+import 'package:pricecompare/application/dto/saved_comparison_dto.dart';
+import 'package:pricecompare/presentation/viewmodels/saved_comparisons_viewmodel.dart';
+import 'package:pricecompare/shared/l10n/app_strings.dart';
+import 'package:pricecompare/shared/theme/theme.dart';
 
 const double _precisionThreshold = 10.0;
 
@@ -82,6 +82,11 @@ class _SavedComparisonsPageState extends State<SavedComparisonsPage> {
     );
   }
 
+  /// Shows a confirmation dialog and, **only if the ViewModel confirms
+  /// successful deletion**, shows the success snackbar.
+  ///
+  /// If [SavedComparisonsViewModel.delete] returns `false` (storage failure),
+  /// an error snackbar is shown instead so the user is never misled.
   Future<void> _confirmDelete(SavedComparisonDto comparison) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -107,13 +112,20 @@ class _SavedComparisonsPageState extends State<SavedComparisonsPage> {
         ],
       ),
     );
-    if (confirmed == true) {
-      await _viewModel.delete(comparison.id);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(AppStrings.savedDeleteSuccess)),
-        );
-      }
+    if (confirmed != true) return;
+
+    final success = await _viewModel.delete(comparison.id);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(AppStrings.savedDeleteSuccess)),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(AppStrings.savedDeleteError)),
+      );
     }
   }
 }

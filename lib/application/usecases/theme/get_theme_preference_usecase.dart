@@ -1,5 +1,5 @@
-import 'package:flutterbase/domain/repositories/theme_preference_repository.dart';
-import 'package:flutterbase/shared/value_objects/app_theme_mode.dart';
+import 'package:pricecompare/domain/repositories/theme_preference_repository.dart';
+import 'package:pricecompare/shared/value_objects/app_theme_mode.dart';
 
 /// Returns the user's currently saved theme preference.
 final class GetThemePreferenceUseCase {

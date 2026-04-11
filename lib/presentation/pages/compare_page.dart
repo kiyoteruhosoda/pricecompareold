@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterbase/app/di/service_locator.dart';
-import 'package:flutterbase/application/dto/saved_comparison_dto.dart';
-import 'package:flutterbase/application/usecases/comparison/save_comparison_usecase.dart';
-import 'package:flutterbase/shared/l10n/app_strings.dart';
+import 'package:pricecompare/app/di/service_locator.dart';
+import 'package:pricecompare/application/dto/saved_comparison_dto.dart';
+import 'package:pricecompare/application/usecases/comparison/save_comparison_usecase.dart';
+import 'package:pricecompare/shared/l10n/app_strings.dart';
 
 // Named constants for magic values
 const double _disabledAlpha = 0.2;

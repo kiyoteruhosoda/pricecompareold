@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutterbase/domain/entities/saved_comparison.dart';
-import 'package:flutterbase/infrastructure/db/sqlite/rows/saved_comparison_row.dart';
+import 'package:pricecompare/domain/entities/saved_comparison.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/rows/saved_comparison_row.dart';
 
 /// Converts between [SavedComparison] domain objects and [SavedComparisonRow]
 /// DB row models.

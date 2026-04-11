@@ -1,7 +1,7 @@
-import 'package:flutterbase/domain/entities/saved_comparison.dart';
-import 'package:flutterbase/domain/repositories/saved_comparison_repository.dart';
-import 'package:flutterbase/infrastructure/db/sqlite/dao/saved_comparison_dao.dart';
-import 'package:flutterbase/infrastructure/mappers/saved_comparison_mapper.dart';
+import 'package:pricecompare/domain/entities/saved_comparison.dart';
+import 'package:pricecompare/domain/repositories/saved_comparison_repository.dart';
+import 'package:pricecompare/infrastructure/db/sqlite/dao/saved_comparison_dao.dart';
+import 'package:pricecompare/infrastructure/mappers/saved_comparison_mapper.dart';
 
 /// SQLite-backed implementation of [SavedComparisonRepository].
 class SqliteSavedComparisonRepository implements SavedComparisonRepository {
