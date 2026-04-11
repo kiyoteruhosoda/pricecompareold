@@ -1,24 +1,24 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:flutterbase/application/usecases/app_info/get_app_info_usecase.dart';
-import 'package:flutterbase/application/usecases/debug/get_debug_settings_usecase.dart';
-import 'package:flutterbase/application/usecases/debug/set_debug_mode_usecase.dart';
-import 'package:flutterbase/application/usecases/debug/set_log_level_usecase.dart';
-import 'package:flutterbase/application/usecases/theme/get_theme_preference_usecase.dart';
-import 'package:flutterbase/application/usecases/theme/set_theme_preference_usecase.dart';
-import 'package:flutterbase/domain/repositories/app_info_repository.dart';
-import 'package:flutterbase/domain/repositories/debug_settings_repository.dart';
-import 'package:flutterbase/domain/repositories/theme_preference_repository.dart';
-import 'package:flutterbase/infrastructure/logging/persistent_app_logger.dart';
-import 'package:flutterbase/infrastructure/repositories/package_info_app_info_repository.dart';
-import 'package:flutterbase/infrastructure/repositories/shared_preferences_debug_settings_repository.dart';
-import 'package:flutterbase/infrastructure/repositories/shared_preferences_theme_preference_repository.dart';
-import 'package:flutterbase/presentation/viewmodels/about_viewmodel.dart';
-import 'package:flutterbase/presentation/viewmodels/debug_settings_viewmodel.dart';
-import 'package:flutterbase/presentation/viewmodels/debug_viewmodel.dart';
-import 'package:flutterbase/presentation/viewmodels/theme_viewmodel.dart';
-import 'package:flutterbase/shared/logging/app_logger.dart';
+import 'package:pricecompare/application/usecases/app_info/get_app_info_usecase.dart';
+import 'package:pricecompare/application/usecases/debug/get_debug_settings_usecase.dart';
+import 'package:pricecompare/application/usecases/debug/set_debug_mode_usecase.dart';
+import 'package:pricecompare/application/usecases/debug/set_log_level_usecase.dart';
+import 'package:pricecompare/application/usecases/theme/get_theme_preference_usecase.dart';
+import 'package:pricecompare/application/usecases/theme/set_theme_preference_usecase.dart';
+import 'package:pricecompare/domain/repositories/app_info_repository.dart';
+import 'package:pricecompare/domain/repositories/debug_settings_repository.dart';
+import 'package:pricecompare/domain/repositories/theme_preference_repository.dart';
+import 'package:pricecompare/infrastructure/logging/persistent_app_logger.dart';
+import 'package:pricecompare/infrastructure/repositories/package_info_app_info_repository.dart';
+import 'package:pricecompare/infrastructure/repositories/shared_preferences_debug_settings_repository.dart';
+import 'package:pricecompare/infrastructure/repositories/shared_preferences_theme_preference_repository.dart';
+import 'package:pricecompare/presentation/viewmodels/about_viewmodel.dart';
+import 'package:pricecompare/presentation/viewmodels/debug_settings_viewmodel.dart';
+import 'package:pricecompare/presentation/viewmodels/debug_viewmodel.dart';
+import 'package:pricecompare/presentation/viewmodels/theme_viewmodel.dart';
+import 'package:pricecompare/shared/logging/app_logger.dart';
 
 final GetIt sl = GetIt.instance;
 

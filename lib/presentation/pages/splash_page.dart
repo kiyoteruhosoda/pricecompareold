@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterbase/shared/l10n/app_strings.dart';
-import 'package:flutterbase/shared/theme/theme.dart';
+import 'package:pricecompare/shared/l10n/app_strings.dart';
+import 'package:pricecompare/shared/theme/theme.dart';
 
 /// Animated splash screen shown once at startup.
 class SplashPage extends StatefulWidget {

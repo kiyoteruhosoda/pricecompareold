@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutterbase/app/di/service_locator.dart';
-import 'package:flutterbase/presentation/pages/main_page.dart';
-import 'package:flutterbase/presentation/pages/splash_page.dart';
-import 'package:flutterbase/presentation/pages/system/about_page.dart';
-import 'package:flutterbase/presentation/pages/system/debug_page.dart';
-import 'package:flutterbase/presentation/pages/system/licenses_page.dart';
-import 'package:flutterbase/presentation/pages/system/logs_page.dart';
-import 'package:flutterbase/shared/l10n/app_strings.dart';
-import 'package:flutterbase/shared/logging/app_logger.dart';
+import 'package:pricecompare/app/di/service_locator.dart';
+import 'package:pricecompare/presentation/pages/main_page.dart';
+import 'package:pricecompare/presentation/pages/splash_page.dart';
+import 'package:pricecompare/presentation/pages/system/about_page.dart';
+import 'package:pricecompare/presentation/pages/system/debug_page.dart';
+import 'package:pricecompare/presentation/pages/system/licenses_page.dart';
+import 'package:pricecompare/presentation/pages/system/logs_page.dart';
+import 'package:pricecompare/shared/l10n/app_strings.dart';
+import 'package:pricecompare/shared/logging/app_logger.dart';
 
 /// Named route definitions.
 class AppRouter {

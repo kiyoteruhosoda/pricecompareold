@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterbase/shared/theme/app_theme.dart';
-import 'package:flutterbase/shared/theme/app_colors.dart';
+import 'package:pricecompare/shared/theme/app_theme.dart';
+import 'package:pricecompare/shared/theme/app_colors.dart';
 
 void main() {
   group('AppTheme.light', () {
